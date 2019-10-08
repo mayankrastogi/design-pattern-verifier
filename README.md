@@ -43,28 +43,29 @@ public @interface SingletonGoF {
 You will take a program that uses your assigned design pattern - you can implement this program or find a program that implements this pattern in an open-source repository or on the Internet - and annotate it using your own annotations that you designed and implemented for this pattern. Next, you will implement your pattern usage verifier where you will use Java Annotation Processing API calls with Java Reflection to obtain the information about the annotated program entities and issue warnings about the violations of the rules for the usage of your chosen design pattern. For example, if there is a class that is annotated with @SingletonGoF.OneInstance and a method of this class that is annotated with @SingletonGoF.MainMethod is not static, then your verifier may issue an error message that demands that there must be a static method in the singleton class that creates an instance. Alternatively, such annotated method may exist and the class Singleton is instantiated, but your analyzer will determine that this method is not invoked anywhere in a program and will issue a warning about it. Designing an annotation system for your assigned pattern and implementing its verifier is the essence of this homework.
 
 From the lectures we already learned a few patterns in the context of using OO polymorphism. Each of you will select one of the following design patterns from the GoF book on Design Patterns: Elements of Reusable Object-Oriented Software published in 1994. You do not need to buy this book, [it is available for free](https://w3sdesign.com/GoF_Design_Patterns_Reference0100.pdf).
-- 0.Abstract factory groups object factories that have a common theme.
-- 1.Builder constructs complex objects by separating construction and representation.
-- 2.Factory method creates objects without specifying the exact class to create.
-- 3.Prototype creates objects by cloning an existing object.
-- 4.Adapter allows classes with incompatible interfaces to work together by wrapping its own interface around that of an already existing class.
-- 5.Bridge decouples an abstraction from its implementation so that the two can vary independently.
-- 6.Composite composes zero-or-more similar objects so that they can be manipulated as one object.
-- 7.Decorator dynamically adds/overrides behaviour in an existing method of an object.
-- 8.Facade provides a simplified interface to a large body of code.
-- 9.Flyweight reduces the cost of creating and manipulating a large number of similar objects.
-- 10.Proxy provides a placeholder for another object to control access, reduce cost, and reduce complexity.
-- 11.Chain of responsibility delegates commands to a chain of processing objects.
-- 12.Command creates objects which encapsulate actions and parameters.
-- 13.Interpreter implements a specialized language.
-- 14.Iterator accesses the elements of an object sequentially without exposing its underlying representation.
-- 15.Mediator allows loose coupling between classes by being the only class that has detailed knowledge of their methods.
-- 16.Memento provides the ability to restore an object to its previous state (undo).
-- 17.Observer is a publish/subscribe pattern which allows a number of observer objects to see an event.
-- 18.State allows an object to alter its behavior when its internal state changes.
-- 19.Strategy allows one of a family of algorithms to be selected on-the-fly at runtime.
-- 20.Template method defines the skeleton of an algorithm as an abstract class, allowing its subclasses to provide concrete behavior.
-- 21.Visitor separates an algorithm from an object structure by moving the hierarchy of methods into one object.
+
+* 0.Abstract factory groups object factories that have a common theme.
+* 1.Builder constructs complex objects by separating construction and representation.
+* 2.Factory method creates objects without specifying the exact class to create.
+* 3.Prototype creates objects by cloning an existing object.
+* 4.Adapter allows classes with incompatible interfaces to work together by wrapping its own interface around that of an already existing class.
+* 5.Bridge decouples an abstraction from its implementation so that the two can vary independently.
+* 6.Composite composes zero-or-more similar objects so that they can be manipulated as one object.
+* 7.Decorator dynamically adds/overrides behaviour in an existing method of an object.
+* 8.Facade provides a simplified interface to a large body of code.
+* 9.Flyweight reduces the cost of creating and manipulating a large number of similar objects.
+* 10.Proxy provides a placeholder for another object to control access, reduce cost, and reduce complexity.
+* 11.Chain of responsibility delegates commands to a chain of processing objects.
+* 12.Command creates objects which encapsulate actions and parameters.
+* 13.Interpreter implements a specialized language.
+* 14.Iterator accesses the elements of an object sequentially without exposing its underlying representation.
+* 15.Mediator allows loose coupling between classes by being the only class that has detailed knowledge of their methods.
+* 16.Memento provides the ability to restore an object to its previous state (undo).
+* 17.Observer is a publish/subscribe pattern which allows a number of observer objects to see an event.
+* 18.State allows an object to alter its behavior when its internal state changes.
+* 19.Strategy allows one of a family of algorithms to be selected on-the-fly at runtime.
+* 20.Template method defines the skeleton of an algorithm as an abstract class, allowing its subclasses to provide concrete behavior.
+* 21.Visitor separates an algorithm from an object structure by moving the hierarchy of methods into one object.
 
 To determine your assigned pattern for this homework, take the modulo operation and your UIN as an integer and compute the modulus (UIN mod 22) - it is the number of your assigned pattern. First, you should study your pattern, create a Java project with an example of the implementation of the assigned pattern, and think of its program entities and constraints. Explicitly state rules that are important to hold for a given pattern to hold its essential properties. For example, instantiating new Singleton multiple times in a program defeats the purpose of having a unique Singleton object. The quality of the constraints and rules for your assigned pattern is a major component of your grade for this homework.
 
