@@ -1,2 +1,5 @@
 rootProject.name = 'design-pattern-verifier'
 
+include 'annotations'
+include 'annotation-processor'
+include 'examples'
