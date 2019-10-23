@@ -15,3 +15,13 @@ dependencies {
     // JUnit testing framework
     testImplementation 'junit:junit:4.12'
 }
+
+mainClassName = 'com.mayankrastogi.cs474.hw2.examples.IteratorExamplesMain'
+
+// Switch on debug mode in the annotation processor for printing debug messages during the processing
+compileJava {
+    if(project.hasProperty('debugAnnotationProcessor')) {
+        options.compilerArgs += ['-AAnnotationProcessor.debug=true']
+        println('Debugging mode for annotation processor has been switched on.')
+    }
+}
