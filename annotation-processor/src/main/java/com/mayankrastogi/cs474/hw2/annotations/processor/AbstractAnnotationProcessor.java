@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,6 +68,19 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor {
     // =================================================================================================================
     // Utility functions for extracting common information from elements
     // =================================================================================================================
+
+    boolean withTreatMandatoryWarningsAsErrors(boolean flag, Supplier<Boolean> operation) {
+        // Store current state
+        var previousState = treatMandatoryWarningsAsErrors;
+
+        // Change the state with new value and perform the operation
+        treatMandatoryWarningsAsErrors = flag;
+        var success = operation.get();
+
+        // Restore the state
+        treatMandatoryWarningsAsErrors = previousState;
+        return success;
+    }
 
     boolean elementImplementsInterface(Element element, String interfaceClassName) {
         var elementType = typeUtils.erasure(element.asType());
@@ -180,26 +194,18 @@ public abstract class AbstractAnnotationProcessor extends AbstractProcessor {
         sendDiagnostic(Diagnostic.Kind.NOTE, message, element);
     }
 
-    void mandatoryWarning(String message) {
+    void warning(String message) {
         if (treatMandatoryWarningsAsErrors)
             error(message);
         else
             sendDiagnostic(Diagnostic.Kind.MANDATORY_WARNING, message);
     }
 
-    void mandatoryWarning(String message, Element element) {
+    void warning(String message, Element element) {
         if (treatMandatoryWarningsAsErrors)
             error(message, element);
         else
             sendDiagnostic(Diagnostic.Kind.MANDATORY_WARNING, message, element);
-    }
-
-    void warning(String message) {
-        sendDiagnostic(Diagnostic.Kind.WARNING, message);
-    }
-
-    void warning(String message, Element element) {
-        sendDiagnostic(Diagnostic.Kind.WARNING, message, element);
     }
 
     private void sendDiagnostic(Diagnostic.Kind kind, String message) {

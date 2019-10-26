@@ -79,7 +79,7 @@ public class IterableAggregateAnnotationProcessor extends AbstractAnnotationProc
                 .count();
 
         if (count > 0) {
-            debug("Found " + count + " elements annotated with " + ITERATOR_FACTORY_ANNOTATION_NAME + " within iterable aggregate");
+            debug("Found " + count + " element(s) annotated with " + ITERATOR_FACTORY_ANNOTATION_NAME + " within iterable aggregate");
             return true;
         } else {
             error("An iterable aggregate must have at least one method annotated with " + ITERATOR_FACTORY_ANNOTATION_NAME, element);
