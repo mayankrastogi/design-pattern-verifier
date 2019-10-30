@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'scala'
     id 'application'
 }
 
@@ -9,8 +10,12 @@ dependencies {
     implementation project(':annotations')
     annotationProcessor project(':annotation-processor')
 
+    // Add Scala support
+    implementation 'org.scala-lang:scala-library:2.13.1'
+
     // Logback logging framework
     implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'com.typesafe.scala-logging:scala-logging_2.13:3.9.2'
 }
 
 mainClassName = 'com.mayankrastogi.cs474.hw2.examples.IteratorExamplesMain'
