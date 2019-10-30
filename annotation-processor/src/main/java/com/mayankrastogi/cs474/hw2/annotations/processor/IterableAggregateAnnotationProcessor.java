@@ -1,6 +1,7 @@
 package com.mayankrastogi.cs474.hw2.annotations.processor;
 
 import com.mayankrastogi.cs474.hw2.annotations.IterableAggregate;
+import com.mayankrastogi.cs474.hw2.annotations.Iterator;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -36,7 +37,8 @@ public class IterableAggregateAnnotationProcessor extends AbstractAnnotationProc
         for (var iterableAggregateElement : iterableAggregates) {
             debug("Processing iterableAggregateElement", iterableAggregateElement);
 
-            var success = assertIterableAggregateElementIsValid(iterableAggregateElement) &&
+            var success = assertIterableAggregateElementIsAppliedOnClass(iterableAggregateElement) &&
+                    assertIterableAggregateAnnotationValueIsAnnotatedWithIterator(iterableAggregateElement, roundEnv) &&
                     assertIterableAggregateElementContainsAtLeastOneIteratorFactory(iterableAggregateElement);
             debug("Processing successful: " + success);
 
@@ -57,16 +59,32 @@ public class IterableAggregateAnnotationProcessor extends AbstractAnnotationProc
         return true;
     }
 
-    private boolean assertIterableAggregateElementIsValid(Element element) {
-        debug("assertIterableAggregateElementIsValid...");
+    private boolean assertIterableAggregateElementIsAppliedOnClass(Element element) {
+        debug("assertIterableAggregateElementIsAppliedOnClass...");
 
         if (element.getKind() != ElementKind.CLASS) {
             error("Only classes can be annotated with " + ITERABLE_AGGREGATE_ANNOTATION_NAME, element);
             return false;
         } else {
-            debug("assertIterableAggregateElementIsValid: true");
+            debug("assertIterableAggregateElementIsAppliedOnClass: true");
             return true;
         }
+    }
+
+    private boolean assertIterableAggregateAnnotationValueIsAnnotatedWithIterator(Element element, RoundEnvironment roundEnvironment) {
+        debug("assertIterableAggregateAnnotationValueIsAnnotatedWithIterator...");
+
+        var annotationValue = typeUtils.asElement(getAnnotationValueAsType(element, IterableAggregate.class));
+        var iterators = roundEnvironment.getElementsAnnotatedWith(Iterator.class);
+
+        if (!iterators.contains(annotationValue)) {
+            error(String.format(
+                    "%s is not an iterator. Value of %s must be a class annotated with @%s.",
+                    annotationValue, ITERABLE_AGGREGATE_ANNOTATION_NAME, Iterator.class.getName()));
+            return false;
+        }
+        debug("assertIterableAggregateAnnotationValueIsAnnotatedWithIterator: true");
+        return true;
     }
 
     private boolean assertIterableAggregateElementContainsAtLeastOneIteratorFactory(Element element) {
