@@ -113,21 +113,21 @@ object IteratorExamplesMain extends App with LazyLogging {
     logger.debug("tree: " + tree)
 
     logger.debug("Iterating tree using `dfsIterator()`...")
-    println("Depth-first tree traversal:")
 
-    var iterator = tree.dfsIterator
-    while (!iterator.isDone)
-      print("  " + iterator.next.data)
-    println()
+    println("Depth-first tree traversal:")
+    printTree(tree.dfsIterator())
 
     logger.debug("Iterating tree using `bfsIterator()`...")
-    println("Breadth-first tree traversal:")
 
-    iterator = tree.bfsIterator
-    while (!iterator.isDone)
-      print("  " + iterator.next.data)
-    println()
+    println("Breadth-first tree traversal:")
+    printTree(tree.bfsIterator())
 
     logger.debug("Tree Iteration Example Finished.")
+
+    def printTree[T](iterator: Tree[T]#TreeIterator): Unit = {
+      while (!iterator.isDone)
+        print("  " + iterator.next.data)
+      println()
+    }
   }
 }
