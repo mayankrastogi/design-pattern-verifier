@@ -1,15 +1,16 @@
 plugins {
-    id 'java'
+    id 'scala'
     id "com.adarshr.test-logger" version "2.0.0"
 }
-
-sourceCompatibility = 1.11
 
 dependencies {
     implementation project(':annotations')
 
-    // JUnit testing framework
-    testImplementation 'junit:junit:4.12'
+    // Add Scala support
+    implementation 'org.scala-lang:scala-library:2.13.1'
+
+    // Scalatest testing framework
+    testImplementation 'org.scalatest:scalatest_2.13:3.0.8'
     // Google compile testing library
     testImplementation 'com.google.testing.compile:compile-testing:0.18'
 }
