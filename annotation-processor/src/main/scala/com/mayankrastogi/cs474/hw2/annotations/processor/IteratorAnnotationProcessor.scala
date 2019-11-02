@@ -10,12 +10,18 @@ import javax.lang.model.element._
 
 import scala.jdk.CollectionConverters._
 
+/**
+ * Verifies the correct usage of @[[Iterator]] annotation and its child annotations
+ * - @[[com.mayankrastogi.cs474.hw2.annotations.Iterator.CurrentItem]]
+ * , @[[com.mayankrastogi.cs474.hw2.annotations.Iterator.IsDone]],
+ * and @[[com.mayankrastogi.cs474.hw2.annotations.Iterator.NextItem]].
+ */
 class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
 
-  private val ITERATOR_ANNOTATION_NAME = "@" + classOf[Iterator].getName
-  private val CURRENT_ITEM_ANNOTATION_NAME = "@" + classOf[Iterator.CurrentItem].getName
-  private val IS_DONE_ANNOTATION_NAME = "@" + classOf[Iterator.IsDone].getName
-  private val NEXT_ITEM_ANNOTATION_NAME = "@" + classOf[Iterator.NextItem].getName
+  private val ITERATOR_ANNOTATION_NAME = "@" + classOf[Iterator].getCanonicalName
+  private val CURRENT_ITEM_ANNOTATION_NAME = "@" + classOf[Iterator.CurrentItem].getCanonicalName
+  private val IS_DONE_ANNOTATION_NAME = "@" + classOf[Iterator.IsDone].getCanonicalName
+  private val NEXT_ITEM_ANNOTATION_NAME = "@" + classOf[Iterator.NextItem].getCanonicalName
 
   private var iterators: Set[Element] = _
 
@@ -27,7 +33,7 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
   )
 
   override def process(annotations: util.Set[_ <: TypeElement], roundEnv: RoundEnvironment): Boolean = {
-    debug(String.format("process(annotations: %s, roundEnv: %s)", annotations.toString, roundEnv.toString))
+    debug(s"process(annotations: $annotations, roundEnv: $roundEnv)")
 
     iterators = roundEnv.getElementsAnnotatedWith(classOf[Iterator]).asScala.toSet
     debug("iterators: " + iterators)
@@ -123,7 +129,7 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
         .getEnclosedElements.asScala
         .count(_.getAnnotation(annotation) != null)
 
-    debug(s"Found $count element(s) annotated with @${annotation.getName} within iterator")
+    debug(s"Found $count element(s) annotated with @${annotation.getCanonicalName} within iterator")
 
     if (count == 1) {
       debug("assertIteratorElementContainsOnlyOneMethodAnnotatedWith: true")
@@ -131,7 +137,8 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
     }
     else {
       val quantity = if (count < 1) "a" else "only one"
-      error(s"An iterator must have $quantity  method annotated with @${annotation.getName}", enclosingElement)
+      error(s"An iterator must have $quantity  method annotated with " +
+        s"@${annotation.getCanonicalName}", enclosingElement)
       false
     }
   }
@@ -148,7 +155,8 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
       true
     }
     else {
-      error(s"A method annotated with @${methodAnnotation.getName} must be part of a class annotated with $ITERATOR_ANNOTATION_NAME", element)
+      error(s"A method annotated with @${methodAnnotation.getCanonicalName} must be part of a class " +
+        s"annotated with $ITERATOR_ANNOTATION_NAME", element)
       false
     }
   }
@@ -164,11 +172,13 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
 
     val methodReturnType = element.asInstanceOf[ExecutableElement].getReturnType
     if (typeUtils.isAssignable(iteratorAnnotationValue, methodReturnType)) {
-      debug(s"The return type of the method annotated with @${methodAnnotation.getName} is assignable to the type specified as value on its enclosing $ITERATOR_ANNOTATION_NAME")
+      debug(s"The return type of the method annotated with @${methodAnnotation.getCanonicalName} is " +
+        s"assignable to the type specified as value on its enclosing $ITERATOR_ANNOTATION_NAME")
       true
     }
     else {
-      error(s"The return type of the method annotated with @${methodAnnotation.getName} is `$methodReturnType` but the iterator expects it to be `$iteratorAnnotationValue`.", element)
+      error(s"The return type of the method annotated with @${methodAnnotation.getCanonicalName} is " +
+        s"`$methodReturnType` but the iterator expects it to be `$iteratorAnnotationValue`.", element)
       false
     }
   }
@@ -180,7 +190,8 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
       true
     }
     else {
-      error("A method annotated with @" + methodAnnotation.getName + " must not take any parameters", element)
+      error(s"A method annotated with @${methodAnnotation.getCanonicalName} must not take any " +
+        s"parameters", element)
       false
     }
   }
@@ -196,7 +207,8 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
       true
     }
     else {
-      error(s"The return type of the method annotated with $IS_DONE_ANNOTATION_NAME is `$methodReturnType` but the iterator expects it to be `$expectedReturnType`.", element)
+      error(s"The return type of the method annotated with $IS_DONE_ANNOTATION_NAME is `$methodReturnType` " +
+        s"but the iterator expects it to be `$expectedReturnType`.", element)
       false
     }
   }
@@ -208,7 +220,8 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
 
     val operationSuccessful = withTreatMandatoryWarningsAsErrors(treatWarningsAsErrors) {
       if (element.getModifiers.contains(Modifier.PRIVATE)) {
-        warning("A method annotated with @" + methodAnnotation.getName + " was found to be private", element)
+        warning(s"A method annotated with @${methodAnnotation.getCanonicalName} was found to be " +
+          s"private", element)
         false
       }
       else {
@@ -220,6 +233,13 @@ class IteratorAnnotationProcessor extends AbstractAnnotationProcessor {
     operationSuccessful || !treatWarningsAsErrors
   }
 
+  /**
+   * Inspects and returns the value of `treatWarningsAsErrors` property on the @[[Iterator]] annotation applied on the
+   * specified `element`'s enclosing element.
+   *
+   * @param element An [[Element]] enclosed in an [[Element]] annotated with @[[Iterator]].
+   * @return The value of `treatWarningsAsErrors` on the parent @[[Iterator]] annotation.
+   */
   private def shouldTreatWarningsAsErrors(element: Element): Boolean = {
     debug("shouldTreatWarningsAsErrors...")
 

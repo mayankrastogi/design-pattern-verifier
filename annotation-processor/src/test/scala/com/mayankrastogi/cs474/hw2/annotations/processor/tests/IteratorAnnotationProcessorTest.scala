@@ -8,6 +8,9 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatestplus.junit.JUnitRunner
 
+/**
+ * Tests that the [[IteratorAnnotationProcessor]] is able to catch issues mentioned in this test suite.
+ */
 @RunWith(classOf[JUnitRunner])
 class IteratorAnnotationProcessorTest extends FunSuite {
 
@@ -38,7 +41,8 @@ class IteratorAnnotationProcessorTest extends FunSuite {
     assertThat(compile("CurrentItemNotInIterator.java")).failed()
   }
 
-  test("Return type of method annotated with @CurrentItem must match the value property of its parent class's @Iterator annotation.") {
+  test("Return type of method annotated with @CurrentItem must match the value property of its parent " +
+    "class's @Iterator annotation.") {
     assertThat(compile("CurrentItemReturnTypeDifferentFromIteratorAnnotationValue.java")).failed()
   }
 
@@ -66,7 +70,8 @@ class IteratorAnnotationProcessorTest extends FunSuite {
     assertThat(compile("NextItemNotInIterator.java")).failed()
   }
 
-  test("Return type of method annotated with @NextItem must match the value property of its parent class's @Iterator annotation.") {
+  test("Return type of method annotated with @NextItem must match the value property of its parent " +
+    "class's @Iterator annotation.") {
     assertThat(compile("NextItemReturnTypeDifferentFromIteratorAnnotationValue.java")).failed()
   }
 
@@ -78,6 +83,13 @@ class IteratorAnnotationProcessorTest extends FunSuite {
     assertThat(compile("NextItemPrivate.java")).hadWarningCount(1)
   }
 
+  /**
+   * Compiles the specified Java source file, present in the `src/test/resources` directory, and runs the
+   * [[IteratorAnnotationProcessor]] during the compilation.
+   *
+   * @param fileName The Java source file to compile. The file should be present in the `src/test/resources` directory.
+   * @return The result of the compilation.
+   */
   private def compile(fileName: String): Compilation = {
     javac
       .withProcessors(new IteratorAnnotationProcessor)

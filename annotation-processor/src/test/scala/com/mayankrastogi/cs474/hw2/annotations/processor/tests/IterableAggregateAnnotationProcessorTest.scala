@@ -8,6 +8,9 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatestplus.junit.JUnitRunner
 
+/**
+ * Tests that the [[IterableAggregateAnnotationProcessor]] is able to catch issues mentioned in this test suite.
+ */
 @RunWith(classOf[JUnitRunner])
 class IterableAggregateAnnotationProcessorTest extends FunSuite {
 
@@ -32,10 +35,18 @@ class IterableAggregateAnnotationProcessorTest extends FunSuite {
     assertThat(compile("IteratorFactoryNotInIterableAggregate.java")).failed()
   }
 
-  test("Return type of a method annotated with @IteratorFactory must match the value property of its parent class's @IterableAggregate annotation.") {
+  test("Return type of a method annotated with @IteratorFactory must match the value property of its " +
+    "parent class's @IterableAggregate annotation.") {
     assertThat(compile("IteratorFactoryReturnTypeDifferentFromIterableAggregateAnnotationValue.java")).failed()
   }
 
+  /**
+   * Compiles the specified Java source file, present in the `src/test/resources` directory, and runs the
+   * [[IterableAggregateAnnotationProcessor]] during the compilation.
+   *
+   * @param fileName The Java source file to compile. The file should be present in the `src/test/resources` directory.
+   * @return The result of the compilation.
+   */
   private def compile(fileName: String): Compilation = {
     javac
       .withProcessors(new IterableAggregateAnnotationProcessor)

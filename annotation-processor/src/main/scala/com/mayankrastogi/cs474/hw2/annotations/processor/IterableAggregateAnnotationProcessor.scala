@@ -9,10 +9,14 @@ import javax.lang.model.element.{Element, ElementKind, ExecutableElement, TypeEl
 
 import scala.jdk.CollectionConverters._
 
+/**
+ * Verifies the correct usage of @[[IterableAggregate]] annotation and its child annotation
+ * - @[[com.mayankrastogi.cs474.hw2.annotations.IterableAggregate.IteratorFactory]].
+ */
 class IterableAggregateAnnotationProcessor extends AbstractAnnotationProcessor {
 
-  private val ITERABLE_AGGREGATE_ANNOTATION_NAME = "@" + classOf[IterableAggregate].getName
-  private val ITERATOR_FACTORY_ANNOTATION_NAME = "@" + classOf[IterableAggregate.IteratorFactory].getName
+  private val ITERABLE_AGGREGATE_ANNOTATION_NAME = "@" + classOf[IterableAggregate].getCanonicalName
+  private val ITERATOR_FACTORY_ANNOTATION_NAME = "@" + classOf[IterableAggregate.IteratorFactory].getCanonicalName
 
   private var iterableAggregates: Set[Element] = _
   private var iteratorFactories: Set[Element] = _
@@ -23,7 +27,7 @@ class IterableAggregateAnnotationProcessor extends AbstractAnnotationProcessor {
   )
 
   override def process(annotations: util.Set[_ <: TypeElement], roundEnv: RoundEnvironment): Boolean = {
-    debug(String.format("process(annotations: %s, roundEnv: %s)", annotations.toString, roundEnv.toString))
+    debug(s"process(annotations: $annotations, roundEnv: $roundEnv)")
 
     iterableAggregates = roundEnv.getElementsAnnotatedWith(classOf[IterableAggregate]).asScala.toSet
     debug("iterableAggregates: " + iterableAggregates)
@@ -80,7 +84,8 @@ class IterableAggregateAnnotationProcessor extends AbstractAnnotationProcessor {
     val iterators = roundEnvironment.getElementsAnnotatedWith(classOf[Iterator])
 
     if (!iterators.contains(annotationValue)) {
-      error(s"$annotationValue is not an iterator. Value of $ITERABLE_AGGREGATE_ANNOTATION_NAME must be a class annotated with @${classOf[Iterator].getName}.")
+      error(s"$annotationValue is not an iterator. Value of $ITERABLE_AGGREGATE_ANNOTATION_NAME must be a " +
+        s"class annotated with @${classOf[Iterator].getCanonicalName}.")
       false
     }
     else {
@@ -98,11 +103,13 @@ class IterableAggregateAnnotationProcessor extends AbstractAnnotationProcessor {
         .count(iteratorFactories.contains(_))
 
     if (count > 0) {
-      debug(s"Found $count element(s) annotated with $ITERATOR_FACTORY_ANNOTATION_NAME within iterable aggregate")
+      debug(s"Found $count element(s) annotated with $ITERATOR_FACTORY_ANNOTATION_NAME within iterable" +
+        s" aggregate")
       true
     }
     else {
-      error("An iterable aggregate must have at least one method annotated with " + ITERATOR_FACTORY_ANNOTATION_NAME, element)
+      error("An iterable aggregate must have at least one method annotated with " +
+        ITERATOR_FACTORY_ANNOTATION_NAME, element)
       false
     }
   }
@@ -119,7 +126,8 @@ class IterableAggregateAnnotationProcessor extends AbstractAnnotationProcessor {
       true
     }
     else {
-      error("An iterator factory method must be part of a class annotated with " + ITERABLE_AGGREGATE_ANNOTATION_NAME, element)
+      error("An iterator factory method must be part of a class annotated with " +
+        ITERABLE_AGGREGATE_ANNOTATION_NAME, element)
       false
     }
   }
@@ -135,11 +143,13 @@ class IterableAggregateAnnotationProcessor extends AbstractAnnotationProcessor {
 
     val iteratorFactoryMethodReturnType = element.asInstanceOf[ExecutableElement].getReturnType
     if (typeUtils.isAssignable(iterableAggregateAnnotationValue, iteratorFactoryMethodReturnType)) {
-      debug("The return type of the iterator factory method is assignable to the type specified as value on its enclosing " + ITERABLE_AGGREGATE_ANNOTATION_NAME)
+      debug("The return type of the iterator factory method is assignable to the type specified as value on" +
+        s" its enclosing $ITERABLE_AGGREGATE_ANNOTATION_NAME")
       true
     }
     else {
-      error(s"The return type of the iterator factory method is `$iteratorFactoryMethodReturnType` but the iterable aggregate expects it to be `$iterableAggregateAnnotationValue`.", element)
+      error(s"The return type of the iterator factory method is `$iteratorFactoryMethodReturnType` but the " +
+        s"iterable aggregate expects it to be `$iterableAggregateAnnotationValue`.", element)
       false
     }
   }
