@@ -4,6 +4,9 @@ import com.typesafe.scalalogging.LazyLogging
 
 import scala.jdk.CollectionConverters._
 
+/**
+ * The driver program for running the examples.
+ */
 object IteratorExamplesMain extends App with LazyLogging {
 
   println(
@@ -16,6 +19,7 @@ object IteratorExamplesMain extends App with LazyLogging {
       |
       |This application demonstrates 3 classes that use the iterator pattern and are annotated with different variations
       |of the @Iterator and @IterableAggregate (and their nested) annotations:
+      |
       |  1. StudentCollection: A class annotated with @IterableAggregate that implements `java.lang.Iterable`. It's
       |       iterator class is annotated with @Iterator and implements `java.util.Iterator`. The iterator returns a
       |       `Student` object during iteration.
@@ -23,7 +27,7 @@ object IteratorExamplesMain extends App with LazyLogging {
       |       within the range specified while constructing its object.
       |  3. Tree: A class annotated with @IterableAggregate that provides two methods annotated with @IteratorFactory.
       |       The two methods return instances of `Tree.TreeIterator` that allow the user to iterate the nodes of the
-      |       tree in depth-first and breadth-first manners.
+      |       tree in depth-first and breadth-first orders.
       |""".stripMargin)
 
   printExampleName("Student Collection Iteration Example")
@@ -38,9 +42,9 @@ object IteratorExamplesMain extends App with LazyLogging {
   private def printExampleName(exampleName: String): Unit = {
     println(
       s"""
-         |---------------------------------------------------------------------------------------------------------------
+         |-----------------------------------------------------------------------------------------------------------------
          |$exampleName
-         |---------------------------------------------------------------------------------------------------------------
+         |-----------------------------------------------------------------------------------------------------------------
          |""".stripMargin)
   }
 
@@ -97,7 +101,7 @@ object IteratorExamplesMain extends App with LazyLogging {
         |       5               6               7               8               9              10
         |""".stripMargin)
 
-    logger.debug("Creating 10 nodes using the RangeGenerator...")
+    logger.debug("Creating 10 nodes...")
 
     val allNodes = (1 to 10).map(new Node[Integer](_))
     logger.debug("allNodes: " + allNodes)
