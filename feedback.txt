@@ -1,0 +1,7 @@
+Hi Mayank,
+What a pleasure to grade your homework! You put a lot of thoughts into defining constraints and rules for the pattern iterator and I like how you implemented it cleanly and elegantly, especially your use of google's compile testing. In general, you need to include all details about building and using the processor, but it is ok.
+
+Come to see me on Tuesday during my office hours, I want to talk to you about doing RAship for me in Spring 2020. You earned 10%.
+
+Thank you,
+Mark
